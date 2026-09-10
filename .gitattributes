@@ -1,0 +1,2 @@
+data_old/*.txt filter=lfs diff=lfs merge=lfs -text
+data_raw/*.txt filter=lfs diff=lfs merge=lfs -text
