@@ -58,14 +58,20 @@ missing_per_gene <- colSums(is.na(depmap_gd_classified))
 
 #missing gene
 gene_missing_summary <- data.frame(
-  category = c("Complete", "Partly missing", "Entirely missing"),
+  category = c(
+    "Complete",
+    "Partly missing",
+    "Entirely missing"
+  ),
   number_of_genes = c(
     sum(missing_per_gene == 0),
-    sum(missing_per_gene > 0 &
-          missing_per_gene < nrow(depmap_gd_classified))
+    sum(
+      missing_per_gene > 0 &
+        missing_per_gene < nrow(depmap_gd_classified)
+    ),
+    sum(missing_per_gene == nrow(depmap_gd_classified))
   )
 )
-
 print(gene_missing_summary)
 
 # missing measurement count
@@ -75,3 +81,33 @@ cell_missing_summary <- data.frame(
   missing_genes = rowSums(is.na(depmap_gd_classified))
 )
 print(cell_missing_summary)
+
+
+# keep the 726 gene, missing partlym, 결측제거
+depmap_gd_available <- depmap_gd_classified[
+  ,
+  missing_per_gene < nrow(depmap_gd_classified),
+  drop = FALSE
+]
+dim(depmap_gd_available)
+
+#  cell-line order confirm
+identical(
+  rownames(depmap_gd_available),
+  matched_meta$condition
+)
+# Identify the primary comparison groups
+is_adrn <- matched_meta$AM_class_stringent == "ADRN"
+is_mes <- matched_meta$AM_class_stringent == "MES"
+
+# Count available measurements for each gene in each group
+n_adrn <- colSums(!is.na(
+  depmap_gd_available[is_adrn, , drop = FALSE]
+))
+
+n_mes <- colSums(!is.na(
+  depmap_gd_available[is_mes, , drop = FALSE]
+))
+
+# Summarise the number of genes at each coverage combination
+table(ADRN_observed = n_adrn, MES_observed = n_mes)
