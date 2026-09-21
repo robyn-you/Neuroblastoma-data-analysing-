@@ -12,7 +12,6 @@ head(depmap_meta)
 table(depmap_meta$AM_class_stringent, useNA = "ifany")
 
 
-
 #dependency data import, full size
 depmap_gd <- read.delim(
   "data_raw/depmap_GD.txt",
@@ -51,3 +50,28 @@ dim(depmap_gd_classified)
 table(matched_meta$AM_class_stringent, useNA = "ifany")
 identical(rownames(depmap_gd_classified),
           matched_meta$condition)
+
+# check missing dependency measurments in the matched dataset
+sum(is.na(depmap_gd_classified)) #identifies missing entries
+mean(is.na(depmap_gd_classified)) * 100 #% check
+missing_per_gene <- colSums(is.na(depmap_gd_classified))
+
+#missing gene
+gene_missing_summary <- data.frame(
+  category = c("Complete", "Partly missing", "Entirely missing"),
+  number_of_genes = c(
+    sum(missing_per_gene == 0),
+    sum(missing_per_gene > 0 &
+          missing_per_gene < nrow(depmap_gd_classified))
+  )
+)
+
+print(gene_missing_summary)
+
+# missing measurement count
+cell_missing_summary <- data.frame(
+  cell_line = rownames(depmap_gd_classified),
+  cell_state = matched_meta$AM_class_stringent,
+  missing_genes = rowSums(is.na(depmap_gd_classified))
+)
+print(cell_missing_summary)
