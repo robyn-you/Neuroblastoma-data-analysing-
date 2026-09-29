@@ -1,9 +1,0 @@
-data_raw/
-data_old/
-results/
-.Rhistory
-.RData
-.Ruserdata
-.Rproj.user/
-.env
-key_function.R
