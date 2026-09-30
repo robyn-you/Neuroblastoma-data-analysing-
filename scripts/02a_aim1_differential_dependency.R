@@ -22,7 +22,7 @@ read_tab <- function(path, id_col = "condition") {
   df
 }
 
-## ---- 1. Load data ----------------------------------------------------------
+##  1. Load data 
 ## NOTE: depmap_GD.txt and depmap_TF_Activity.txt are indexed by the short
 ## cell-line "condition" name (e.g. "CHP212"), NOT the DepMap ModelID
 ## (e.g. "ACH-000120"). depmap_meta.txt carries both, so we join on
@@ -34,7 +34,7 @@ tf_panel <- read_tab("data_raw/depmap_TF_Activity.txt") # 34 lines x 763 TFs -> 
 tf_genes <- setdiff(names(tf_panel), "condition")
 cat("TF panel size:", length(tf_genes), "\n")
 
-## ---- 2. Match cell lines to classification ---------------------------------
+##  2. Match cell lines to classification 
 meta_sub <- meta[, c("condition", "AM_class", "AM_class_stringent")]
 gd_annot <- merge(meta_sub, gd, by = "condition")
 
@@ -50,7 +50,7 @@ gd_use <- gd_annot[keep, ]
 cat("\nCell lines used for ADRN vs MES comparison:", nrow(gd_use), "\n")
 print(table(gd_use$AM_class_stringent))
 
-## ---- 3. Build TF-restricted dependency matrix ------------------------------
+##  3. Build TF-restricted dependency matrix 
 tf_genes_present <- intersect(tf_genes, names(gd_use))
 cat("\nTF genes present in dependency matrix:", length(tf_genes_present),
     "of", length(tf_genes), "\n")
@@ -63,7 +63,7 @@ complete_genes <- rowSums(is.na(expr_mat)) == 0
 expr_mat <- expr_mat[complete_genes, ]
 cat("TF genes with complete data across all used lines:", nrow(expr_mat), "\n")
 
-## ---- 4. limma differential dependency analysis -----------------------------
+##  4. limma differential dependency analysis 
 group <- factor(gd_use$AM_class_stringent, levels = c("ADRN", "MES"))
 design <- model.matrix(~group)
 
@@ -82,7 +82,7 @@ write.csv(res, "outputs/aim1_TF_dependency_limma_results.csv", row.names = FALSE
 cat("\n== Top 15 differentially dependent TFs (by p-value) ==\n")
 print(head(res, 15))
 
-## ---- 5. Sanity check against literature-known CRC TFs ----------------------
+##  5. Sanity check against literature-known CRC TFs 
 known_ADRN <- c("PHOX2B", "GATA3", "HAND2", "ISL1", "TBX2", "ASCL1")
 known_MES  <- c("WWTR1", "FOSL2", "TEAD4", "PRRX1", "RUNX1", "RUNX2")
 
@@ -92,7 +92,7 @@ print(res[res$Gene %in% known_ADRN, ])
 cat("\n== Candidate MES-CRC TFs (expect positive diff = more essential in MES) ==\n")
 print(res[res$Gene %in% known_MES, ])
 
-## ---- 6. Volcano plot --------------------------------------------------------
+##  6. Volcano plot 
 res$sig <- ifelse(res$adj.P.Val < 0.05, "FDR < 0.05", "n.s.")
 res$label <- ifelse(res$Gene %in% c(known_ADRN, known_MES), res$Gene, NA)
 

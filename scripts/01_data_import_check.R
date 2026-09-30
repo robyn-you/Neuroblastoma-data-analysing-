@@ -13,7 +13,7 @@ read_tab <- function(path) {
   fread(path, sep = "\t", header = TRUE, data.table = FALSE, quote = "\"")
 }
 
-## ---- 1. DepMap cell line classification: old vs raw ----------------------
+##  1. DepMap cell line classification: old vs raw 
 old_depmap_meta <- read_tab("data_old/depmap_meta_nb_clean.txt")
 raw_depmap_meta <- read_tab("data_raw/depmap_meta.txt")
 
@@ -29,7 +29,7 @@ cat("== DepMap meta: rows matched =", nrow(cmp_depmap), "==\n")
 cat("AM_class agreement (old vs raw):\n")
 print(table(cmp_depmap$AM_class_old, cmp_depmap$AM_class_raw, useNA = "ifany"))
 
-## ---- 2. KOCAK patient classification: old vs raw --------------------------
+##  2. KOCAK patient classification: old vs raw 
 old_kocak_meta <- read_tab("data_old/KOCAK_meta_nb_clean.txt")
 raw_kocak_meta <- read_tab("data_raw/KOCAK_meta.txt")
 
@@ -42,7 +42,7 @@ cat("\n== KOCAK meta: rows matched =", nrow(cmp_kocak), "==\n")
 cat("AM_class agreement (old vs raw):\n")
 print(table(cmp_kocak$AM_class_old, cmp_kocak$AM_class_raw, useNA = "ifany"))
 
-## ---- 3. Save canonical objects for downstream scripts ---------------------
+##  3. Save canonical objects for downstream scripts 
 dir.create("outputs", showWarnings = FALSE)
 saveRDS(raw_depmap_meta, "outputs/depmap_meta.rds")
 saveRDS(raw_kocak_meta, "outputs/kocak_meta.rds")

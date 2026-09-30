@@ -15,7 +15,7 @@ cat("Metadata rows:", nrow(meta), "| Dependency matrix:", dim(gd), "\n\n")
 cat("Cell-state classification, all metadata (stringent):\n")
 print(table(meta$AM_class_stringent, useNA = "ifany"))
 
-## ---- 1. Models that are both classified and measured -----------------------
+##  1. Models that are both classified and measured 
 matched_meta <- meta[!is.na(meta$AM_class_stringent) &
                        meta$condition %in% rownames(gd), ]
 gd_classified <- gd[matched_meta$condition, , drop = FALSE]
@@ -23,11 +23,11 @@ gd_classified <- gd[matched_meta$condition, , drop = FALSE]
 cat("\nClassified models with dependency data:", nrow(matched_meta), "\n")
 print(table(matched_meta$AM_class_stringent))
 
-## ---- 2. Row alignment ------------------------------------------------------
+##  2. Row alignment 
 cat("\nRow order identical to metadata:",
     identical(rownames(gd_classified), matched_meta$condition), "\n")
 
-## ---- 3. Missingness --------------------------------------------------------
+##  3. Missingness 
 cat("Overall missing entries:", sum(is.na(gd_classified)),
     sprintf("(%.2f%%)\n", mean(is.na(gd_classified)) * 100))
 
@@ -47,7 +47,7 @@ cat("\nCell-line missingness (range):",
     min(cell_missing_summary$missing_genes), "-",
     max(cell_missing_summary$missing_genes), "genes\n")
 
-## ---- 4. Drop entirely-missing genes, then apply an 80% coverage rule -------
+##  4. Drop entirely-missing genes, then apply an 80% coverage rule 
 gd_available <- gd_classified[, missing_per_gene < nrow(gd_classified), drop = FALSE]
 cat("\nGenes retained after dropping entirely-missing:", ncol(gd_available), "\n")
 

@@ -37,7 +37,7 @@ print(table(gd_annot$AM_class, useNA = "ifany"))
 cat("\nClass breakdown, stringent (for comparison):\n")
 print(table(gd_annot$AM_class_stringent, useNA = "ifany"))
 
-## ---- 2. Subset to ADRN/MES using non-stringent AM_class ---------------------
+##  2. Subset to ADRN/MES using non-stringent AM_class 
 keep <- gd_annot$AM_class %in% c("ADRN", "MES")
 gd_use <- gd_annot[keep, ]
 cat("\nCell lines used (non-stringent):", nrow(gd_use), "\n")
@@ -49,7 +49,7 @@ colnames(expr_mat) <- gd_use$condition
 expr_mat <- expr_mat[rowSums(is.na(expr_mat)) == 0, ]
 cat("TF genes with complete data:", nrow(expr_mat), "\n")
 
-## ---- 3. limma, same design as before ----------------------------------------
+##  3. limma, same design as before 
 group <- factor(gd_use$AM_class, levels = c("ADRN", "MES"))
 design <- model.matrix(~group)
 fit <- eBayes(lmFit(expr_mat, design))
@@ -63,7 +63,7 @@ write.csv(res_ns, "outputs/aim1_TF_dependency_limma_NONSTRINGENT.csv", row.names
 cat("\n== Top 15, non-stringent classification ==\n")
 print(head(res_ns, 15))
 
-## ---- 4. Side-by-side comparison with the stringent (primary) result --------
+##  4. Side-by-side comparison with the stringent (primary) result 
 res_strict <- read.csv("outputs/aim1_TF_dependency_limma_results.csv")
 
 compare <- merge(

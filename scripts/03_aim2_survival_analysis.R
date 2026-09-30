@@ -23,7 +23,7 @@ read_tab <- function(path, id_col = "condition") {
   df
 }
 
-## ---- 1. Load and merge KOCAK data -------------------------------------------
+##  1. Load and merge KOCAK data 
 meta     <- read_tab("data_raw/KOCAK_meta.txt")
 survdat  <- read_tab("data_raw/KOCAK_survival.txt")
 tf_act   <- read_tab("data_raw/KOCAK_TF_Activity.txt")
@@ -34,7 +34,7 @@ cat("Patients with meta + survival + TF activity data:", nrow(merged), "\n")
 cat("Class breakdown (stringent):\n")
 print(table(merged$AM_class_stringent, useNA = "ifany"))
 
-## ---- 2. Candidate TF list: literature CRC TFs + top Aim 1 hits --------------
+##  2. Candidate TF list: literature CRC TFs + top Aim 1 hits 
 literature_TFs <- c("PHOX2B", "GATA3", "HAND2", "ISL1", "TBX2", "ASCL1",
                      "WWTR1", "FOSL2", "TEAD4", "PRRX1", "RUNX1", "RUNX2")
 aim1_top_hits  <- c("ATF5", "MAFA", "TFAP2D", "NFIC", "JUNB", "STAT1",
@@ -84,7 +84,7 @@ print(os_results, row.names = FALSE)
 write.csv(efs_results, "outputs/aim2_cox_EFS_results.csv", row.names = FALSE)
 write.csv(os_results, "outputs/aim2_cox_OS_results.csv", row.names = FALSE)
 
-## ---- 4. Kaplan-Meier curves (median split) for top hits ---------------------
+##  4. Kaplan-Meier curves (median split) for top hits 
 plot_km <- function(gene, time_col, event_col, data, label) {
   x <- data[[gene]]
   grp <- factor(ifelse(x > median(x, na.rm = TRUE), "High activity", "Low activity"),

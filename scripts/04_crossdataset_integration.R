@@ -12,7 +12,7 @@ suppressMessages({
 
 dir.create("outputs", showWarnings = FALSE)
 
-## ---- 1. Load results from Aim 1 and Aim 2 -----------------------------------
+##  1. Load results from Aim 1 and Aim 2 
 dep <- read.csv("outputs/aim1_TF_dependency_limma_results.csv")
 efs <- read.csv("outputs/aim2_cox_EFS_results.csv")
 os  <- read.csv("outputs/aim2_cox_OS_results.csv")
@@ -29,11 +29,11 @@ names(efs) <- c("Gene", "EFS_HR", "EFS_P", "EFS_FDR")
 os <- os[, c("Gene", "HR", "P.Value", "adj.P.Val")]
 names(os) <- c("Gene", "OS_HR", "OS_P", "OS_FDR")
 
-## ---- 2. Merge into one integrated evidence table ----------------------------
+##  2. Merge into one integrated evidence table 
 integrated <- Reduce(function(x, y) merge(x, y, by = "Gene", all = TRUE),
                       list(dep, efs, os))
 
-## ---- 3. Composite ranking score ----------------------------------------------
+##  3. Composite ranking score 
 ## Raw p-values (not FDR) are used for the composite score because the
 ## three FDR corrections were computed over different denominators
 ## (743 genome-wide TFs for Aim 1 vs. 22 candidates for Aim 2) and are
@@ -63,7 +63,7 @@ cat("== Integrated TF ranking (Aim 1 dependency + Aim 2 EFS/OS survival) ==\n")
 print(integrated[, c("Gene", "composite_score", "n_nominal_sig", "n_FDR_sig",
                       "dep_P", "EFS_P", "OS_P")], row.names = FALSE, digits = 3)
 
-## ---- 4. Convergence heatmap --------------------------------------------------
+##  4. Convergence heatmap 
 plot_df <- integrated[, c("Gene", "dep_P", "EFS_P", "OS_P")]
 plot_df$Gene <- factor(plot_df$Gene, levels = rev(integrated$Gene))  # keep rank order
 long <- melt(plot_df, id.vars = "Gene", variable.name = "Test", value.name = "P")
