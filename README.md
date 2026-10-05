@@ -81,6 +81,10 @@ README.md
    source("scripts/01_reconcile_data.R")
    source("scripts/02_aim1_differential_dependency.R")
    source("scripts/02b_aim1_sensitivity_nonstringent.R")
+   .
+   .
+   .
+   source("scripts/02f_aim1_continuous_score.R")
    source("scripts/03_aim2_survival_analysis.R")
    source("scripts/04_crossdataset_integration.R")
    ```
