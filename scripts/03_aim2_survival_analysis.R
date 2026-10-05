@@ -95,7 +95,7 @@ plot_km <- function(gene, time_col, event_col, data, label) {
   p <- ggsurvplot(fit, data = df, pval = TRUE, risk.table = TRUE,
                    title = paste0(gene, " — ", label),
                    xlab = "Days", legend.title = gene,
-                   palette = c("#2C7FB8", "#D95F02"))
+                   palette = c("Blue", "Red"))
   p
 }
 

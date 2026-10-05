@@ -75,9 +75,9 @@ long$sig_label <- ifelse(long$P < 0.001, "***",
                    ifelse(long$P < 0.05, "*", "")))
 
 p <- ggplot(long, aes(x = Test, y = Gene, fill = neg_log10_p)) +
-  geom_tile(color = "white") +
+  geom_tile(color = "White") +
   geom_text(aes(label = sig_label), color = "black", size = 4, vjust = 0.7) +
-  scale_fill_gradient(low = "white", high = "firebrick",
+  scale_fill_gradient(low = "white", high = "tomato",
                        name = expression(-log[10](p))) +
   labs(title = "Integrated evidence: gene dependency vs. clinical survival",
        subtitle = "Genes ranked top-to-bottom by combined evidence strength (Aim 1 + Aim 2)",

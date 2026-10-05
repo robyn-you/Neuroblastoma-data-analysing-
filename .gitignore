@@ -1,0 +1,22 @@
+# Data files (supervisor-provided; not for redistribution)
+data_old/
+data_raw/
+
+# Generated outputs & Figures (스크립트에 의해 자동 생성되는 모든 결과물 제외)
+outputs/
+[Ff]igure/
+[Ff]igure*
+
+# R session / history
+.Rhistory
+.RData
+.Rproj.user/
+
+# renv internal library
+renv/library/
+renv/local/
+renv/staging/
+
+# OS-specific junk
+.DS_Store
+Thumbs.db

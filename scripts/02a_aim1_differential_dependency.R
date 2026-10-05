@@ -70,8 +70,8 @@ design <- model.matrix(~group)
 fit <- lmFit(expr_mat, design)
 fit <- eBayes(fit)
 
-## coefficient 2 = MES - ADRN (positive logFC-equivalent = more dependent
-## in MES than ADRN, since Chronos scores are negative = essential)
+## coefficient 2 = MES - ADRN. Chronos: negative = more essential.
+## iff > 0 => MES less dependent (ADRN more dependent); diff < 0 => MES more dependent
 res <- topTable(fit, coef = 2, number = Inf, sort.by = "P")
 res$Gene <- rownames(res)
 res <- res[, c("Gene", "logFC", "AveExpr", "t", "P.Value", "adj.P.Val")]
@@ -86,27 +86,34 @@ print(head(res, 15))
 known_ADRN <- c("PHOX2B", "GATA3", "HAND2", "ISL1", "TBX2", "ASCL1")
 known_MES  <- c("WWTR1", "FOSL2", "TEAD4", "PRRX1", "RUNX1", "RUNX2")
 
-cat("\n== Known ADRN-CRC TFs (expect negative diff = more essential in ADRN) ==\n")
+cat("\n== Known ADRN-CRC TFs (expect positive diff = more essential in ADRN) ==\n")
 print(res[res$Gene %in% known_ADRN, ])
 
-cat("\n== Candidate MES-CRC TFs (expect positive diff = more essential in MES) ==\n")
+cat("\n== Candidate MES-CRC TFs (expect negative diff = more essential in MES) ==\n")
 print(res[res$Gene %in% known_MES, ])
 
 ##  6. Volcano plot 
 res$sig <- ifelse(res$adj.P.Val < 0.05, "FDR < 0.05", "n.s.")
 res$label <- ifelse(res$Gene %in% c(known_ADRN, known_MES), res$Gene, NA)
 
-p <- ggplot(res, aes(x = diff_MES_minus_ADRN, y = -log10(P.Value), color = sig)) +
-  geom_point(alpha = 0.6, size = 1.3) +
-  geom_text(aes(label = label), na.rm = TRUE, vjust = -0.6, size = 3, color = "black") +
-  scale_color_manual(values = c("FDR < 0.05" = "firebrick", "n.s." = "grey70")) +
+res$group <- ifelse(res$Gene %in% known_ADRN, "Known ADRN TF",
+              ifelse(res$Gene %in% known_MES, "Candidate MES TF", "Other TF"))
+
+library(ggrepel)   # install.packages("ggrepel") 필요
+p <- ggplot(res, aes(x = diff_MES_minus_ADRN, y = -log10(P.Value), color = group)) +
+  geom_point(alpha = 0.7, size = 1.5) +
+  geom_text_repel(aes(label = label), na.rm = TRUE, size = 3, color = "black",
+                  max.overlaps = Inf) +
+  scale_color_manual(values = c("Known ADRN TF" = "red",
+                                "Candidate MES TF" = "blue",
+                                "Other TF" = "grey")) +
   labs(
-    title = "Aim 1: Differential TF dependency, MES vs ADRN neuroblastoma lines",
-    x = "Dependency difference (MES - ADRN); positive = more essential in MES",
+    title = "Aim 1: Differential TF dependency, MES vs ADRN ",
+    x = "Dependency difference (MES - ADRN); positive = more essential in ADRN",
     y = expression(-log[10](p-value)),
     color = NULL
   ) +
-  theme_bw(base_size = 12)
+  theme_bw (base_size = 12)
 
 ggsave("outputs/aim1_volcano_TF_dependency.png", p, width = 8, height = 6, dpi = 150)
 
